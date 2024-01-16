@@ -1,0 +1,97 @@
+From ca8f646e2c59def0417045d4836cfb52a008e4ca Mon Sep 17 00:00:00 2001
+From: "zcz123333" <zcz123333@gmail.com>
+Date: Tue, 16 Jan 2024 01:10:59 +0800
+Subject: [PATCH] fix to make factory reset button work on FriendlyWrt
+
+---
+ .../resources/view/system/flash.js            | 37 +++++++++++--------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
+
+diff --git a/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js b/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
+index 8661181781..2a05e92c1f 100644
+--- a/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
++++ b/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
+@@ -71,7 +71,8 @@ return view.extend({
+ 			fs.trimmed('/proc/sys/kernel/hostname'),
+ 			fs.trimmed('/proc/mtd'),
+ 			fs.trimmed('/proc/partitions'),
+-			fs.trimmed('/proc/mounts')
++			fs.trimmed('/proc/mounts'),
++			L.resolveDefault(fs.stat('/etc/config/emmc-tool'), {})
+ 		];
+ 
+ 		return Promise.all(tasks);
+@@ -101,7 +102,7 @@ return view.extend({
+ 		/* Currently the sysupgrade rpc call will not return, hence no promise handling */
+ 		fs.exec('/sbin/firstboot', [ '-r', '-y' ]);
+ 
+-		ui.awaitReconnect('192.168.1.1', 'openwrt.lan');
++		ui.awaitReconnect('192.168.2.1', 'openwrt.lan');
+ 	},
+ 
+ 	handleRestore: function(ev) {
+@@ -163,7 +164,7 @@ return view.extend({
+ 					E('p', { 'class': 'spinning' }, _('The system is rebooting now. If the restored configuration changed the current LAN IP address, you might need to reconnect manually.'))
+ 				]);
+ 
+-				ui.awaitReconnect(window.location.host, '192.168.1.1', 'openwrt.lan');
++				ui.awaitReconnect(window.location.host, '192.168.2.1', 'openwrt.lan');
+ 			}, this))
+ 			.catch(function(e) { ui.addNotification(null, E('p', e.message)) })
+ 			.finally(function() { btn.firstChild.data = _('Upload archive...') });
+@@ -335,7 +336,7 @@ return view.extend({
+ 		if (opts['keep'][0].checked)
+ 			ui.awaitReconnect(window.location.host);
+ 		else
+-			ui.awaitReconnect('192.168.1.1', 'openwrt.lan');
++			ui.awaitReconnect('192.168.2.1', 'openwrt.lan');
+ 	},
+ 
+ 	handleBackupList: function(ev) {
+@@ -377,7 +378,8 @@ return view.extend({
+ 		    procmtd = rpc_replies[2],
+ 		    procpart = rpc_replies[3],
+ 		    procmounts = rpc_replies[4],
+-		    has_rootfs_data = (procmtd.match(/"rootfs_data"/) != null) || (procmounts.match("overlayfs:\/overlay \/ ") != null),
++		    has_emmc_tool = (rpc_replies[5].type == 'file'),
++		    has_rootfs_data = (procmtd.match(/"rootfs_data"/) != null) || (procmounts.match("overlayfs:\/overlay \/ ") != null) || (procmounts.match("overlay \/ overlay") != null),
+ 		    storage_size = findStorageSize(procmtd, procpart),
+ 		    m, s, o, ss;
+ 
+@@ -435,19 +437,22 @@ return view.extend({
+ 			o.onclick = L.bind(this.handleBlock, this, hostname);
+ 		}
+ 
++		if (has_emmc_tool) {
++			//hide firmware flash button on friendlywrt
++		} else {
++			o = s.option(form.SectionValue, 'actions', form.NamedSection, 'actions', 'actions', _('Flash new firmware image'),
++				has_sysupgrade
++					? _('Upload a sysupgrade-compatible image here to replace the running firmware.')
++					: _('Sorry, there is no sysupgrade support present; a new firmware image must be flashed manually. Please refer to the wiki for device specific install instructions.'));
+ 
+-		o = s.option(form.SectionValue, 'actions', form.NamedSection, 'actions', 'actions', _('Flash new firmware image'),
+-			has_sysupgrade
+-				? _('Upload a sysupgrade-compatible image here to replace the running firmware.')
+-				: _('Sorry, there is no sysupgrade support present; a new firmware image must be flashed manually. Please refer to the wiki for device specific install instructions.'));
+-
+-		ss = o.subsection;
++			ss = o.subsection;
+ 
+-		if (has_sysupgrade) {
+-			o = ss.option(form.Button, 'sysupgrade', _('Image'));
+-			o.inputstyle = 'action important';
+-			o.inputtitle = _('Flash image...');
+-			o.onclick = L.bind(this.handleSysupgrade, this, storage_size, has_rootfs_data);
++			if (has_sysupgrade) {
++				o = ss.option(form.Button, 'sysupgrade', _('Image'));
++				o.inputstyle = 'action important';
++				o.inputtitle = _('Flash image...');
++				o.onclick = L.bind(this.handleSysupgrade, this, storage_size, has_rootfs_data);
++			}
+ 		}
+ 
+ 
+-- 
+2.40.1
+
