@@ -45,3 +45,7 @@ sed -i "s/option limit_enable '1'/option limit_enable '0'/" `find friendlywrt/pa
 
 ## ugly fix of the read-only issue
 #sed -i '3 i sed -i "/^exit.*/i\\/bin\\/mount -o remount,rw /" /etc/rc.local' `find friendlywrt/package -type f -path '*/default-settings/files/*-default-settings'`
+
+## set ip address
+cp ../patches_my/ip_addr.sh `find friendlywrt/target/ -follow -type d -path '*rockchip*/root'`
+echo '[ -f /root/ip_addr.sh ] && /root/ip_addr.sh' >> `find friendlywrt/target/ -follow -type f -path '*rockchip*/uci-defaults/vendor.defaults'`
