@@ -146,6 +146,16 @@ jobs:
               ${FRIENDLYWRT_SRC}/${FRIENDLYWRT_PACKAGE_DIR}
         echo "rootfs_filename=${rootfs_filename}" >> $GITHUB_OUTPUT
 
+    - name: Upload friendlywrt img
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./project/friendlywrt/bin/targets/*/*/*img.gz
+        asset_name: ${{ steps.create_rootfs_package.outputs.rootfs_filename }}
+        tag: ${{ needs.prepare_release.outputs.release_tag }}
+        overwrite: true
+        file_glob: true
+
     - name: Upload rootfs package
       uses: svenstaro/upload-release-action@v2
       with:
@@ -256,6 +266,7 @@ jobs:
         esac
         [ "${{ matrix.SET }}" == "docker" ] && SUFFIX="-docker"
         FILENAME=${MODEL}-FriendlyWrt-${{ matrix.VERSION }}${SUFFIX}.img
+        FILENAME_WITHOUT_OVERLAYFS=${MODEL}-FriendlyWrt-${{ matrix.VERSION }}${SUFFIX}-no-overlayfs.img
         DIRNAME=friendlywrt$(echo ${{ matrix.VERSION }}|awk -F . '{print $1}')${SUFFIX}
         CONFIG=rockchip${SUFFIX}
         cat > .current_config.mk <<EOL
@@ -265,6 +276,7 @@ jobs:
         TARGET_SD_RAW_FILENAME=${FILENAME}
         EOL
         echo "img_filename=${FILENAME}" >> $GITHUB_OUTPUT
+        echo "img_filename_without_overlayfs=${FILENAME_WITHOUT_OVERLAYFS}" >> $GITHUB_OUTPUT
 
     - name: Unpack friendlywrt rootfs
       run: |
@@ -293,6 +305,29 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ./artifact/${{ steps.config.outputs.img_filename }}.gz
         asset_name: ${{ steps.config.outputs.img_filename }}.gz
+        tag: ${{ needs.prepare_release.outputs.release_tag }}
+        overwrite: true
+
+    - name: Disable overlayfs
+      run: |
+        cd project
+        source ../scripts_my/disable_overlayfs.sh
+
+    - name: Build sd image with overlayfs disabled
+      id: build_sd_image_without_overlayfs
+      run: |
+        cd project
+        ./build.sh sd-img
+        mv out/${{ steps.config.outputs.img_filename }} ../artifact/${img_filename_without_overlayfs}
+        cd ../artifact/
+        gzip *.img
+
+    - name: Upload image to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/${{ steps.config.outputs.img_filename_without_overlayfs }}.gz
+        asset_name: ${{ steps.config.outputs.img_filename_without_overlayfs }}.gz
         tag: ${{ needs.prepare_release.outputs.release_tag }}
         overwrite: true
 
