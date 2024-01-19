@@ -295,9 +295,7 @@ jobs:
       run: |
         cd project
         ./build.sh sd-img
-        mv out/${{ steps.config.outputs.img_filename }} ../artifact/
-        cd ../artifact/
-        gzip *.img
+        mv out/${{ steps.config.outputs.img_filename }}.gz ../artifact/
 
     - name: Upload image to release
       uses: svenstaro/upload-release-action@v2
@@ -318,9 +316,7 @@ jobs:
       run: |
         cd project
         ./build.sh sd-img
-        mv out/${{ steps.config.outputs.img_filename }} ../artifact/${img_filename_without_overlayfs}
-        cd ../artifact/
-        gzip *.img
+        mv out/${{ steps.config.outputs.img_filename }}.gz ../artifact/${img_filename_without_overlayfs}.gz
 
     - name: Upload image to release
       uses: svenstaro/upload-release-action@v2
