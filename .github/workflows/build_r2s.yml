@@ -316,7 +316,7 @@ jobs:
       run: |
         cd project
         ./build.sh sd-img
-        mv out/${{ steps.config.outputs.img_filename }}.gz ../artifact/${img_filename_without_overlayfs}.gz
+        mv out/${{ steps.config.outputs.img_filename }}.gz ../artifact/${{ steps.config.outputs.img_filename_without_overlayfs }}.gz
 
     - name: Upload image to release
       uses: svenstaro/upload-release-action@v2
