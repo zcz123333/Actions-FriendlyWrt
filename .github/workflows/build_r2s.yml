@@ -237,11 +237,6 @@ jobs:
         tag: ${{ needs.prepare_release.outputs.release_tag }}
         fileName: "rootfs-friendlywrt-${{ matrix.VERSION }}-docker.tgz"
 
-    - name: Apply customizations
-      run: |
-        cd project
-        source ../scripts_my/before_build_img.sh
-
     - name: Prepare config
       id: config
       run: |
@@ -283,6 +278,11 @@ jobs:
         cd project
         [ "${{ matrix.SET }}" == "docker" ] && SUFFIX="-docker"
         tar xvzf "../rootfs-friendlywrt-${{ matrix.VERSION }}${SUFFIX}.tgz"
+
+    - name: Apply customizations
+      run: |
+        cd project
+        source ../scripts_my/before_build_img.sh
 
     - name: Compile uboot and kernel
       run: |
