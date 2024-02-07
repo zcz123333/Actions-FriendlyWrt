@@ -18,6 +18,8 @@ if [ -d "friendlywrt/build_dir" ]; then
 fi
 
 #overclock https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh#.E4.BF.AE.E6.94.B9.E5.86.85.E6.A0.B8.E8.A7.A3.E9.94.81.E6.9B.B4.E9.AB.98.E7.9A.84CPU.E9.A2.91.E7.8E.87
-sed -i '/opp-1296000000/{N;N;N;N;a\
+if [ -d "kernel" ]; then
+    sed -i '/opp-1296000000/{N;N;N;N;a\
 \t\topp-1512000000 {\n\t\t\topp-hz = /bits/ 64 <1512000000>;\n\t\t\topp-microvolt = <1450000>;\n\t\t\tclock-latency-ns = <40000>;\n\t\t};
 }' `find kernel/arch -follow -type f -path '*/rockchip/rk3328.dtsi'`
+fi
