@@ -22,9 +22,11 @@ true ${MKFS:="${TOP}/tools/mke2fs"}
 RET=0
 if [ ! -f $1/userdata.img ]; then
 	#USERDATA_SIZE=209715200
+	#default size for without overlay
 	USERDATA_SIZE=629145600
 	echo "Generating empty userdata.img (size:${USERDATA_SIZE})"
 	TMPDIR=`mktemp -d`
+	#used for without overlay
 	#sudo touch ${TMPDIR}/.ext4.resized
 	#sudo mkdir ${TMPDIR}/root
 	IMG_BLK=$((${USERDATA_SIZE} / 4096))

@@ -26,7 +26,7 @@ index 8661181781..2a05e92c1f 100644
  		fs.exec('/sbin/firstboot', [ '-r', '-y' ]);
  
 -		ui.awaitReconnect('192.168.1.1', 'openwrt.lan');
-+		ui.awaitReconnect('192.168.5.11', 'openwrt.lan');
++		ui.awaitReconnect('192.168.2.1', 'openwrt.lan');
  	},
  
  	handleRestore: function(ev) {
@@ -35,7 +35,7 @@ index 8661181781..2a05e92c1f 100644
  				]);
  
 -				ui.awaitReconnect(window.location.host, '192.168.1.1', 'openwrt.lan');
-+				ui.awaitReconnect(window.location.host, '192.168.5.11', 'openwrt.lan');
++				ui.awaitReconnect(window.location.host, '192.168.2.1', 'openwrt.lan');
  			}, this))
  			.catch(function(e) { ui.addNotification(null, E('p', e.message)) })
  			.finally(function() { btn.firstChild.data = _('Upload archive...') });
@@ -44,7 +44,7 @@ index 8661181781..2a05e92c1f 100644
  			ui.awaitReconnect(window.location.host);
  		else
 -			ui.awaitReconnect('192.168.1.1', 'openwrt.lan');
-+			ui.awaitReconnect('192.168.5.11', 'openwrt.lan');
++			ui.awaitReconnect('192.168.2.1', 'openwrt.lan');
  	},
  
  	handleBackupList: function(ev) {
