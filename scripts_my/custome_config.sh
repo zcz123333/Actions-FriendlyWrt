@@ -4,7 +4,6 @@
 sed -i -e '460i\CONFIG_PACKAGE_luci-app-passwall=y' configs/rockchip/01-nanopi
 sed -i -e '460a\CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_Plus=n' configs/rockchip/01-nanopi
 sed -i -e '460a\CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin=n' configs/rockchip/01-nanopi
-sed -i -e '460a\CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=n' configs/rockchip/01-nanopi
 sed -i -e '243i\CONFIG_PACKAGE_keepalived=y' configs/rockchip/01-nanopi
 sed -i -e '184i\CONFIG_PACKAGE_ddns-scripts-cloudflare=y' configs/rockchip/01-nanopi
 sed -i -e '184i\CONFIG_PACKAGE_ddns-scripts-godaddy=y' configs/rockchip/01-nanopi
