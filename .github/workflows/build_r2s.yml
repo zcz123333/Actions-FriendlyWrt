@@ -13,18 +13,18 @@ jobs:
         release_tag="FriendlyWrt-$(date +%Y-%m-%d)"
         echo "release_tag=${release_tag}" >> $GITHUB_OUTPUT
 
-    - name: Create empty release
-      id: release
-      uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.release_tag.outputs.release_tag }}
-        draft: false
-        prerelease: false
+    # - name: Create empty release
+    #   id: release
+    #   uses: softprops/action-gh-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: ${{ steps.release_tag.outputs.release_tag }}
+    #     draft: false
+    #     prerelease: false
     outputs:
       release_tag: ${{ steps.release_tag.outputs.release_tag }}
-      upload_url: ${{ steps.release.outputs.upload_url }}
+      # upload_url: ${{ steps.release.outputs.upload_url }}
 
   build_friendlywrt:
     needs: prepare_release
