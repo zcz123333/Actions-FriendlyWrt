@@ -89,5 +89,8 @@ if [ -f ${SRC_PARAMETER_TPL} ]; then
     fi
 fi
 echo "generating ${DEST_PARAMETER_TXT} done."
+echo "------------------------------------------"
+cat ${DEST_PARAMETER_TXT}
+echo "------------------------------------------"
 
 echo 0
