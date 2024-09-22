@@ -9,7 +9,7 @@ cp ../patches_my/0002-fix-to-make-factory-reset-button-work-on-FriendlyWrt.patch
 
 #fix image build for config preserve flashing
 # add extdata partition(mmcblk0p10) for config storage
-rsync -r ../scripts_my/build_image/sd-fuse/ scripts/sd-fuse/
+rsync --progress -r ../scripts_my/build_image/sd-fuse/ scripts/sd-fuse/
 # use mmcblk0p10 for config storage on startup
 sed -i '/79_move_config/d' device/common/default-settings/install.sh
 if [ -d "friendlywrt/build_dir" ]; then
