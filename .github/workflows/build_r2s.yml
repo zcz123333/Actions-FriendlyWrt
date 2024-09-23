@@ -294,6 +294,8 @@ jobs:
       id: build_sd_image
       run: |
         cd project
+        #make raw image bigger
+        export RAW_SIZE_MB=1600
         ./build.sh sd-img
         mv out/${{ steps.config.outputs.img_filename }}.gz ../artifact/
 
