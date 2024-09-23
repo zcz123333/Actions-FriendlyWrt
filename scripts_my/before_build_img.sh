@@ -23,6 +23,3 @@ if [ -d "kernel" ]; then
 \t\topp-1512000000 {\n\t\t\topp-hz = /bits/ 64 <1512000000>;\n\t\t\topp-microvolt = <1450000>;\n\t\t\tclock-latency-ns = <40000>;\n\t\t};
 }' `find kernel/arch -follow -type f -path '*/rockchip/rk3328.dtsi'`
 fi
-
-#make raw image bigger
-export RAW_SIZE_MB=1600
