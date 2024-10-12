@@ -10,6 +10,14 @@ cp ../patches_my/0002-fix-to-make-factory-reset-button-work-on-FriendlyWrt.patch
 #fix image build for config preserve flashing
 # add extdata partition(mmcblk0p10) for config storage
 rsync --progress -r ../scripts_my/build_image/sd-fuse/ scripts/sd-fuse/
+# adapt for cpu
+echo "cpu = ${{ matrix.CPU }}"
+if [ "${{ matrix.CPU }}" == "RK3399" ]; then
+    echo "modify parameter.template"
+    sed -i 's/RK3328/RK3399/g' scripts/sd-fuse/prebuilt/parameter.template
+    cat scripts/sd-fuse/prebuilt/parameter.template
+    echo "======================="
+fi
 # use mmcblk0p10 for config storage on startup
 sed -i '/79_move_config/d' device/common/default-settings/install.sh
 if [ -d "friendlywrt/build_dir" ]; then
