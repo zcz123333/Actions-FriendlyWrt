@@ -92,7 +92,7 @@ jobs:
         df -h .
         cd project
         source ../scripts_my/add_packages.sh
-        source ../scripts_my/custome_config.sh
+        source ../scripts_my/custome_config_r5s.sh
         echo "======================="
         df -h ../
 
