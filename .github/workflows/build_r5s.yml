@@ -1,4 +1,4 @@
-name: Build R2S
+name: Build R5S
 on:
   workflow_dispatch:
 
