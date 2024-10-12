@@ -1,18 +1,6 @@
-name: Build MY
+name: Build R2S
 on:
   workflow_dispatch:
-    inputs:
-      cpu:
-        description: 'select cpu to build'
-        default: 'rk3399'
-        required: false
-        type: choice
-        options:
-          - rk3399
-          - rk3328
-
-env:
-  SELECTED_CPU: ${{ github.event.client_payload.cpu || github.event.inputs.cpu }}
 
 jobs:
   prepare_release:
@@ -22,25 +10,7 @@ jobs:
     - name: Get release tag
       id: release_tag
       run: |
-        case ${SELECTED_CPU} in
-        rk3328)
-          MODEL=R2S-R2C-Series
-          ;;
-        rk3399)
-          MODEL=R4S-Series
-          ;;
-        rk3568)
-          MODEL=R5S-R5C-Series
-          ;;
-        rk3588)
-          MODEL=T6-R6S-R6C-Series
-          ;;
-        *)
-          echo "unknow cpu"
-          exit 1
-          ;;
-        esac
-        release_tag="FriendlyWrt-${MODEL}-$(date +%Y-%m-%d)"
+        release_tag="FriendlyWrt-$(date +%Y-%m-%d)"
         echo "release_tag=${release_tag}" >> $GITHUB_OUTPUT
 
     # - name: Create empty release
@@ -106,7 +76,7 @@ jobs:
         mkdir project
         cd project
         repo init --depth=1 -u https://github.com/friendlyarm/friendlywrt_manifests -b master-v${{ matrix.VERSION }} \
-                -m ${SELECTED_CPU}.xml --repo-url=https://github.com/friendlyarm/repo  --no-clone-bundle
+                -m rk3328.xml --repo-url=https://github.com/friendlyarm/repo  --no-clone-bundle
 
         repo sync -c friendlywrt --no-clone-bundle
         repo sync -c configs --no-clone-bundle
@@ -134,7 +104,7 @@ jobs:
         DIRNAME=friendlywrt$(echo ${{ matrix.VERSION }}|awk -F . '{print $1}')${SUFFIX}
         CONFIG=rockchip${SUFFIX}
         cat > .current_config.mk <<EOL
-        . device/friendlyelec/${SELECTED_CPU}/base.mk
+        . device/friendlyelec/rk3328/base.mk
         TARGET_IMAGE_DIRNAME=${DIRNAME}
         TARGET_FRIENDLYWRT_CONFIG=${CONFIG}
         EOL
@@ -203,7 +173,7 @@ jobs:
     strategy:
       matrix:
         VERSION: [23.05]
-        CPU: [${SELECTED_CPU}]
+        CPU: [rk3328]
         SET: [non-docker]
     steps:
     - name: Checkout
