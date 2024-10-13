@@ -11,8 +11,8 @@ cp ../patches_my/0002-fix-to-make-factory-reset-button-work-on-FriendlyWrt.patch
 # add extdata partition(mmcblk0p10) for config storage
 rsync --progress -r ../scripts_my/build_image/sd-fuse/ scripts/sd-fuse/
 # adapt for cpu
-echo "cpu = ${ MY_CPU }"
-if [ "${ MY_CPU }" == "rk3399" ]; then
+echo "cpu = ${MY_CPU}"
+if [ "${MY_CPU}" == "rk3399" ]; then
     echo "modify parameter.template"
     sed -i 's/RK3328/RK3399/g' scripts/sd-fuse/prebuilt/parameter.template
     cat scripts/sd-fuse/prebuilt/parameter.template
