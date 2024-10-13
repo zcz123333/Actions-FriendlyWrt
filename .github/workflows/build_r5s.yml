@@ -10,7 +10,7 @@ jobs:
     - name: Get release tag
       id: release_tag
       run: |
-        release_tag="FriendlyWrt-r5s-$(date +%Y-%m-%d)"
+        release_tag="FriendlyWrt-R5S-$(date +%Y-%m-%d)"
         echo "release_tag=${release_tag}" >> $GITHUB_OUTPUT
 
     # - name: Create empty release
