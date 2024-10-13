@@ -12,9 +12,9 @@ cp ../patches_my/0002-fix-to-make-factory-reset-button-work-on-FriendlyWrt.patch
 rsync --progress -r ../scripts_my/build_image/sd-fuse/ scripts/sd-fuse/
 # adapt for cpu
 echo "cpu = ${MY_CPU}"
-if [ "${MY_CPU}" == "rk3399" ]; then
+if [ "${MY_CPU}" == "rk3328" ]; then
     echo "modify parameter.template"
-    sed -i 's/RK3328/RK3399/g' scripts/sd-fuse/prebuilt/parameter.template
+    sed -i 's/RK3399/RK3328/g' scripts/sd-fuse/prebuilt/parameter.template
     cat scripts/sd-fuse/prebuilt/parameter.template
     echo "======================="
 fi
