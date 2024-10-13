@@ -14,7 +14,7 @@ rsync --progress -r ../scripts_my/build_image/sd-fuse/ scripts/sd-fuse/
 echo "cpu = ${MY_CPU}"
 if [ "${MY_CPU}" == "rk3328" ]; then
     echo "modify parameter.template"
-    sed -i 's/RK3399/RK3328/g' scripts/sd-fuse/prebuilt/parameter.template
+    sed -i 's/3399/3328/g' scripts/sd-fuse/prebuilt/parameter.template
     cat scripts/sd-fuse/prebuilt/parameter.template
     echo "======================="
 fi
