@@ -104,6 +104,10 @@ sed -i -e '/boardname=/r /tmp/appendtext.txt' friendlywrt/target/linux/rockchip/
         # sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' package/custom/luci-app-turboacc/Makefile
         # echo "CONFIG_PACKAGE_luci-app-turboacc=y" >> ../configs/rockchip/01-nanopi
 
+        merge_package2 lean_luci/applications/luci-app-openvpn-server
+        sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' package/custom/luci-app-openvpn-server/Makefile
+        echo "CONFIG_PACKAGE_luci-app-openvpn-server=y" >> ../configs/rockchip/01-nanopi
+
         rm -rf lean_luci
     }
 )
