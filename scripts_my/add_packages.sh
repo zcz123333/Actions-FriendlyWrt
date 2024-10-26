@@ -79,10 +79,12 @@ sed -i -e '/boardname=/r /tmp/appendtext.txt' friendlywrt/target/linux/rockchip/
 #     }
 # )
 
-#add ddns-scripts-aliyun
+#add ddns-scripts_aliyun
 (
     cd friendlywrt && {
-        merge_package https://github.com/renndong/ddns-scripts-aliyun ddns-scripts-aliyun
+        git clone --depth=1 --single-branch https://github.com/immortalwrt/packages.git im_packages
+        merge_package2 im_packages/net/ddns-scripts_aliyun
+        rm -rf im_packages
     }
 )
 
