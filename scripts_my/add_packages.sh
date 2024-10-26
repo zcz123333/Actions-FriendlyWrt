@@ -81,6 +81,16 @@ sed -i -e '/boardname=/r /tmp/appendtext.txt' friendlywrt/target/linux/rockchip/
 
 (
     cd friendlywrt && {
+        git clone --depth=1 --single-branch https://github.com/coolsnowwolf/lede.git lean_lede
+
+        merge_package2 lean_lede/package/lean/ddns-scripts_aliyun
+
+        rm -rf lean_lede
+    }
+)
+
+(
+    cd friendlywrt && {
         git clone --depth=1 --single-branch https://github.com/coolsnowwolf/luci.git lean_luci
 
         # merge_package2 lean_luci/applications/luci-app-autoreboot
