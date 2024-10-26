@@ -17,6 +17,8 @@ if [ "${MY_CPU}" == "rk3328" ]; then
     sed -i 's/3399/3328/g' scripts/sd-fuse/prebuilt/parameter.template
     cat scripts/sd-fuse/prebuilt/parameter.template
     echo "======================="
+elif [ "${MY_CPU}" == "rk3399" ]; then
+    sed -i 's/CONFIG_TARGET_rockchip_armv8_DEVICE_.*/CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r4s=y/g' configs/rockchip/01-nanopi
 fi
 # use mmcblk0p10 for config storage on startup
 sed -i '/79_move_config/d' device/common/default-settings/install.sh

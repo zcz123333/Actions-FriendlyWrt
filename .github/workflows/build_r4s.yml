@@ -34,6 +34,8 @@ jobs:
       matrix:
         VERSION: [23.05]
         SET: [non-docker]
+    env:
+      MY_CPU: rk3399
 
     steps:
     - name: Checkout
@@ -76,7 +78,7 @@ jobs:
         mkdir project
         cd project
         repo init --depth=1 -u https://github.com/friendlyarm/friendlywrt_manifests -b master-v${{ matrix.VERSION }} \
-                -m rk3399.xml --repo-url=https://github.com/friendlyarm/repo  --no-clone-bundle
+                -m ${MY_CPU}.xml --repo-url=https://github.com/friendlyarm/repo  --no-clone-bundle
 
         repo sync -c friendlywrt --no-clone-bundle
         repo sync -c configs --no-clone-bundle
@@ -104,7 +106,7 @@ jobs:
         DIRNAME=friendlywrt$(echo ${{ matrix.VERSION }}|awk -F . '{print $1}')${SUFFIX}
         CONFIG=rockchip${SUFFIX}
         cat > .current_config.mk <<EOL
-        . device/friendlyelec/rk3399/base.mk
+        . device/friendlyelec/${MY_CPU}/base.mk
         TARGET_IMAGE_DIRNAME=${DIRNAME}
         TARGET_FRIENDLYWRT_CONFIG=${CONFIG}
         EOL
@@ -151,7 +153,6 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ./project/friendlywrt/bin/targets/*/*/*img.gz
-        asset_name: ${{ steps.create_rootfs_package.outputs.rootfs_filename }}
         tag: ${{ needs.prepare_release.outputs.release_tag }}
         overwrite: true
         file_glob: true
@@ -301,7 +302,7 @@ jobs:
         ./build.sh sd-img
         mv out/${{ steps.config.outputs.img_filename }}.gz ../artifact/
 
-    - name: Upload image to release
+    - name: Upload sd image to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -322,7 +323,7 @@ jobs:
         ./build.sh sd-img
         mv out/${{ steps.config.outputs.img_filename }}.gz ../artifact/${{ steps.config.outputs.img_filename_without_overlayfs }}.gz
 
-    - name: Upload image to release
+    - name: Upload sd image without overlayfs to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}

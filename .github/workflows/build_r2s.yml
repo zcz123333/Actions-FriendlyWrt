@@ -151,7 +151,6 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ./project/friendlywrt/bin/targets/*/*/*img.gz
-        asset_name: ${{ steps.create_rootfs_package.outputs.rootfs_filename }}
         tag: ${{ needs.prepare_release.outputs.release_tag }}
         overwrite: true
         file_glob: true
