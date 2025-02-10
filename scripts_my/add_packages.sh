@@ -133,4 +133,4 @@ sed -i -e '/boardname=/r /tmp/appendtext.txt' friendlywrt/target/linux/rockchip/
 # rust version
 sed -i 's/^PKG_HASH.*/PKG_HASH:=15cee7395b07ffde022060455b3140366ec3a12cbbea8f1ef2ff371a9cca51bf/' friendlywrt/feeds/packages/lang/rust/Makefile
 sed -i 's/^PKG_VERSION.*/PKG_VERSION:=1.84.0/' friendlywrt/feeds/packages/lang/rust/Makefile
-
+sed -i '12s/.*/@@ -60,7 +60,7 @@ tar = "0.4"/' friendlywrt/feeds/packages/lang/rust/patches/0001-Update-xz2-and-use-it-static.patch
