@@ -1,6 +1,8 @@
 #!/bin/bash
 
 #sed -i -e '579i\CONFIG_TARGET_ROOTFS_EXT4FS=y' configs/rockchip/01-nanopi
+sed -i -e '555i\CONFIG_PACKAGE_tcpdump=y' configs/rockchip/01-nanopi
+sed -i -e '513i\CONFIG_PACKAGE_mosquitto-client-ssl=y' configs/rockchip/01-nanopi
 sed -i -e '460i\CONFIG_PACKAGE_luci-app-passwall=y' configs/rockchip/01-nanopi
 sed -i -e '460a\CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_Plus=n' configs/rockchip/01-nanopi
 sed -i -e '460a\CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin=n' configs/rockchip/01-nanopi
