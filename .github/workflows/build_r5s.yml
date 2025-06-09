@@ -4,7 +4,7 @@ on:
 
 jobs:
   prepare_release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id
     steps:
     - name: Get release tag
@@ -28,12 +28,12 @@ jobs:
 
   build_friendlywrt:
     needs: prepare_release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id
     strategy:
       matrix:
-        VERSION: [23.05]
-        SET: [docker]
+        VERSION: [24.10]
+        SET: [non-docker]
 
     steps:
     - name: Checkout
@@ -61,7 +61,6 @@ jobs:
         sed -i -e 's/^(cat fa-toolchain/# (cat fa-toolchain/g' install.sh
         sed -i -e 's/^(tar xf fa-toolchain/# (tar xf fa-toolchain/g' install.sh
         sudo -E bash ./install.sh
-        sudo -E update-alternatives --install $(which python) python /usr/bin/python2.7 20
         sudo -E git config --global user.name 'GitHub Actions'
         sudo -E git config --global user.email 'noreply@github.com'
         git clone https://github.com/friendlyarm/repo
@@ -156,14 +155,14 @@ jobs:
 
   build_img:
     needs: [prepare_release,build_friendlywrt]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id
 
     strategy:
       matrix:
-        VERSION: [23.05]
+        VERSION: [24.10]
         CPU: [rk3568]
-        SET: [docker]
+        SET: [non-docker]
     steps:
     - name: Checkout
       uses: actions/checkout@main
@@ -179,7 +178,6 @@ jobs:
         sed -i -e 's/^(cat fa-toolchain/# (cat fa-toolchain/g' install.sh
         sed -i -e 's/^(tar xf fa-toolchain/# (tar xf fa-toolchain/g' install.sh
         sudo -E bash ./install.sh
-        sudo -E update-alternatives --install $(which python) python /usr/bin/python2.7 20
         sudo -E git config --global user.name 'GitHub Actions'
         sudo -E git config --global user.email 'noreply@github.com'
         git clone https://github.com/friendlyarm/repo
@@ -239,6 +237,12 @@ jobs:
           ;;
         rk3568)
           MODEL=R5S-R5C-Series
+          ;;
+        rk3566)
+          MODEL=R3S-Series
+          ;;
+        rk3576)
+          MODEL=NanoPi-M5
           ;;
         rk3588)
           MODEL=T6-R6S-R6C-Series
