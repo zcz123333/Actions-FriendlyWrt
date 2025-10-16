@@ -83,7 +83,7 @@ sed -i -e '/boardname=/r /tmp/appendtext.txt' friendlywrt/target/linux/rockchip/
 (
     cd friendlywrt && {
         git clone --depth=1 --single-branch https://github.com/immortalwrt/packages.git im_packages
-        merge_package2 im_packages/net/ddns-scripts_aliyun
+        merge_package2 im_packages/net/ddns-scripts
         rm -rf im_packages
     }
 )
