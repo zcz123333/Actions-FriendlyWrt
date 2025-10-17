@@ -137,6 +137,9 @@ sed -i -e '/boardname=/r /tmp/appendtext.txt' friendlywrt/target/linux/rockchip/
 #sed -i 's/^PKG_VERSION.*/PKG_VERSION:=1.84.0/' friendlywrt/feeds/packages/lang/rust/Makefile
 #sed -i '12s/.*/@@ -60,7 +60,7 @@ tar = "0.4"/' friendlywrt/feeds/packages/lang/rust/patches/0001-Update-xz2-and-use-it-static.patch
 
+# 2025.10.17 rust disable download
+sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' friendlywrt/feeds/packages/lang/rust/Makefile
+
 # go lang version 2025.10.16
 (
     cd friendlywrt && {
