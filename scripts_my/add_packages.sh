@@ -124,6 +124,15 @@ sed -i -e '/boardname=/r /tmp/appendtext.txt' friendlywrt/target/linux/rockchip/
 
 #git clone --depth=1 --single-branch https://github.com/chenmozhijin/turboacc -b package friendlywrt/patch/turboacc
 
+# {{ Add luci-app-socat
+(cd friendlywrt && {
+    merge_package https://github.com/sbwml/openwrt_pkgs openwrt_pkgs/luci-app-socat
+})
+cat >> configs/rockchip/01-nanopi <<EOL
+CONFIG_PACKAGE_luci-app-socat=y
+EOL
+# }}
+
 (
     cd friendlywrt && {
         ./scripts/feeds update -a
