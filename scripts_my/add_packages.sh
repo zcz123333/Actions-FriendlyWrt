@@ -64,9 +64,9 @@ sed -i -e '/boardname=/r /tmp/appendtext.txt' friendlywrt/target/linux/rockchip/
 
 #(cd friendlywrt && merge_feed helloworld "https://github.com/stupidloud/helloworld;tmp")
 #(cd friendlywrt && merge_package https://github.com/xiaorouji/openwrt-passwall-packages openwrt-passwall-packages)
-(cd friendlywrt && merge_feed PWpackages "https://github.com/xiaorouji/openwrt-passwall-packages")
+(cd friendlywrt && merge_feed PWpackages "https://github.com/Openwrt-Passwall/openwrt-passwall-packages")
 #(cd friendlywrt && merge_package "-b main https://github.com/xiaorouji/openwrt-passwall" openwrt-passwall)
-(cd friendlywrt && merge_feed PWluci "https://github.com/xiaorouji/openwrt-passwall;main")
+(cd friendlywrt && merge_feed PWluci "https://github.com/Openwrt-Passwall/openwrt-passwall;main")
 #(cd friendlywrt && merge_feed lean_luci "https://github.com/coolsnowwolf/luci")
 
 # (
