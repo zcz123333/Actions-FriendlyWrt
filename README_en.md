@@ -14,9 +14,10 @@
 - Minor version upgrade (e.g., 25.12.2 → 25.12.3): Flash images-XXYYZZ.tgz via the "eMMC Tools". You may choose to keep existing data, but compatibility should be evaluated on your own.
 - Major version upgrade (e.g., 24.10 → 25.12): It is recommended to [back up your configuration](https://openwrt.org/docs/guide-user/troubleshooting/backup_restore) first, then perform a full installation using XYZ.img.gz to avoid compatibility issues.
 ### Changelog
-* 2026/04/25
+* 2026/04/29
     *  Updated to openwrt-25.12.2
-    *  Updated the "eMMC Tools" to improve stability
+    *  Updated the "eMMC Tools" to improved stability and support for more formats
+    *  Enabled built-in fq_codel queue scheduler in kernel to improve network latency
 * 2026/03/06
     * Added support for NanoPi‑NEO3-Plus
 * 2025/12/31
