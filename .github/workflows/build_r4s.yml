@@ -36,6 +36,7 @@ jobs:
         SET: [non-docker]
     env:
       MY_CPU: rk3399
+      MY_VERSION: ${{ matrix.VERSION }}
 
     steps:
     - name: Checkout

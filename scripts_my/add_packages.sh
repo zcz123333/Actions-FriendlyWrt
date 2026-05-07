@@ -85,7 +85,7 @@ sed -i -e "/boardname=/r $APPEND_TEXT" friendlywrt/target/linux/rockchip/armv8/b
 #add ddns-scripts_aliyun
 (
     cd friendlywrt && {
-        git clone --depth=1 --single-branch -b openwrt-${VERSION} https://github.com/immortalwrt/packages.git im_packages
+        git clone --depth=1 --single-branch -b openwrt-${MY_VERSION} https://github.com/immortalwrt/packages.git im_packages
         merge_package2 im_packages/net/ddns-scripts
         rm -rf im_packages
     }
@@ -93,7 +93,7 @@ sed -i -e "/boardname=/r $APPEND_TEXT" friendlywrt/target/linux/rockchip/armv8/b
 
 (
     cd friendlywrt && {
-        git clone --depth=1 --single-branch -b openwrt-${VERSION} https://github.com/coolsnowwolf/luci.git lean_luci
+        git clone --depth=1 --single-branch -b openwrt-${MY_VERSION} https://github.com/coolsnowwolf/luci.git lean_luci
 
         # merge_package2 lean_luci/applications/luci-app-autoreboot
         # sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' package/custom/luci-app-autoreboot/Makefile
