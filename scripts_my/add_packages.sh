@@ -85,7 +85,7 @@ sed -i -e "/boardname=/r $APPEND_TEXT" friendlywrt/target/linux/rockchip/armv8/b
 #add ddns-scripts_aliyun
 (
     cd friendlywrt && {
-        git clone --depth=1 --single-branch https://github.com/immortalwrt/packages.git im_packages
+        git clone --depth=1 --single-branch -b openwrt-${VERSION} https://github.com/immortalwrt/packages.git im_packages
         merge_package2 im_packages/net/ddns-scripts
         rm -rf im_packages
     }
@@ -93,15 +93,11 @@ sed -i -e "/boardname=/r $APPEND_TEXT" friendlywrt/target/linux/rockchip/armv8/b
 
 (
     cd friendlywrt && {
-        git clone --depth=1 --single-branch https://github.com/coolsnowwolf/luci.git lean_luci
+        git clone --depth=1 --single-branch -b openwrt-${VERSION} https://github.com/coolsnowwolf/luci.git lean_luci
 
         # merge_package2 lean_luci/applications/luci-app-autoreboot
         # sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' package/custom/luci-app-autoreboot/Makefile
         # echo "CONFIG_PACKAGE_luci-app-autoreboot=y" >> ../configs/rockchip/01-nanopi
-
-        merge_package2 lean_luci/applications/luci-app-serverchan
-        sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' package/custom/luci-app-serverchan/Makefile
-        echo "CONFIG_PACKAGE_luci-app-serverchan=y" >> ../configs/rockchip/01-nanopi
 
         # merge_package2 lean_luci/applications/luci-app-vlmcsd
         # sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' package/custom/luci-app-vlmcsd/Makefile
@@ -123,6 +119,12 @@ sed -i -e "/boardname=/r $APPEND_TEXT" friendlywrt/target/linux/rockchip/armv8/b
         rm -rf lean_luci
     }
 )
+
+# add luci-app-wechatpush
+(cd friendlywrt && {
+    merge_package https://github.com/tty228/luci-app-wechatpush luci-app-wechatpush
+    echo "CONFIG_PACKAGE_luci-app-wechatpush=y" >> ../configs/rockchip/01-nanopi
+})
 
 #git clone --depth=1 --single-branch https://github.com/chenmozhijin/turboacc -b package friendlywrt/patch/turboacc
 
@@ -155,6 +157,6 @@ sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' 
 (
     cd friendlywrt && {
         rm -rf feeds/packages/lang/golang
-        git clone https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
+        git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
     }
 )
