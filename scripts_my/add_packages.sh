@@ -93,6 +93,14 @@ sed -i -e "/boardname=/r $APPEND_TEXT" friendlywrt/target/linux/rockchip/armv8/b
 
 (
     cd friendlywrt && {
+        git clone --depth=1 --single-branch https://github.com/coolsnowwolf/lede.git lean_openwrt
+        merge_package2 lean_openwrt/package/lean/cpufreq
+        rm -rf lean_openwrt
+    }
+)
+
+(
+    cd friendlywrt && {
         git clone --depth=1 --single-branch -b openwrt-${MY_VERSION} https://github.com/coolsnowwolf/luci.git lean_luci
 
         # merge_package2 lean_luci/applications/luci-app-autoreboot
@@ -104,9 +112,9 @@ sed -i -e "/boardname=/r $APPEND_TEXT" friendlywrt/target/linux/rockchip/armv8/b
         # echo "CONFIG_PACKAGE_luci-app-vlmcsd=y" >> ../configs/rockchip/01-nanopi
 
         # use luci-app-cpufreq in friendlywrt
-        # merge_package2 lean_luci/applications/luci-app-cpufreq
-        # sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' package/custom/luci-app-cpufreq/Makefile
-        # echo "CONFIG_PACKAGE_luci-app-cpufreq=y" >> ../configs/rockchip/01-nanopi
+        merge_package2 lean_luci/applications/luci-app-cpufreq
+        sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' package/custom/luci-app-cpufreq/Makefile
+        echo "CONFIG_PACKAGE_luci-app-cpufreq=y" >> ../configs/rockchip/01-nanopi
 
         # merge_package2 lean_luci/applications/luci-app-turboacc
         # sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' package/custom/luci-app-turboacc/Makefile
@@ -136,6 +144,18 @@ sed -i -e "/boardname=/r $APPEND_TEXT" friendlywrt/target/linux/rockchip/armv8/b
 #CONFIG_PACKAGE_luci-app-socat=y
 #EOL
 # }}
+
+#add luci-app-netdata
+(
+    cd friendlywrt && {
+        git clone --depth=1 --single-branch https://github.com/sbwml/openwrt_pkgs.git sbwml_pkgs
+
+        merge_package2 sbwml_pkgs/luci-app-netdata
+        echo "CONFIG_PACKAGE_luci-app-netdata=y" >> ../configs/rockchip/01-nanopi
+
+        rm -rf sbwml_pkgs
+    }
+)
 
 (
     cd friendlywrt && {

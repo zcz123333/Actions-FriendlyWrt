@@ -29,7 +29,8 @@ sed -i 's/CONFIG_LUCI_LANG_zh_Hans=n/CONFIG_LUCI_LANG_zh_Hans=y/' configs/rockch
 # sed -i "s/option sfe_bridge '1'/option sfe_bridge '0'/" $config_file_turboacc
 # sed -i "/dep.*INCLUDE_.*=n/d" `find friendlywrt/package/ -follow -type f -path '*/luci-app-turboacc/Makefile'`
 
-sed -i "s/option limit_enable '1'/option limit_enable '0'/" `find friendlywrt/package/ -follow -type f -path '*/nft-qos/files/nft-qos.config'`
+# after 25.12 no more nft-qos
+#sed -i "s/option limit_enable '1'/option limit_enable '0'/" `find friendlywrt/package/ -follow -type f -path '*/nft-qos/files/nft-qos.config'`
 
 # line_number_INCLUDE_Xray=$[`grep -m1 -n 'Include Xray' friendlywrt/package/feeds/PWluci/luci-app-passwall/Makefile|cut -d: -f1`-1]
 # sed -i $line_number_INCLUDE_Xray'd' friendlywrt/package/feeds/PWluci/luci-app-passwall/Makefile
