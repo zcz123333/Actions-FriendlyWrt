@@ -1,0 +1,71 @@
+From 71aa6363a6357ceda253b033bceda7963a67b50a Mon Sep 17 00:00:00 2001
+From: "zcz123333" <zcz123333@gmail.com>
+Date: Thu, 7 May 2026 16:02:02 +0100
+Subject: [PATCH] fix to make factory reset button work on FriendlyWrt
+
+---
+ flash.js | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
+
+diff --git a/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js b/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
+index 94f23f9..38e2edd 100644
+--- a/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
++++ b/modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js
+@@ -71,7 +71,8 @@ return view.extend({
+ 			fs.trimmed('/proc/sys/kernel/hostname'),
+ 			fs.trimmed('/proc/mtd'),
+ 			fs.trimmed('/proc/partitions'),
+-			fs.trimmed('/proc/mounts')
++			fs.trimmed('/proc/mounts'),
++			L.resolveDefault(fs.stat('/etc/config/emmc-tool'), {})
+ 		];
+ 
+ 		return Promise.all(tasks);
+@@ -373,9 +374,10 @@ return view.extend({
+ 		});
+ 	},
+ 
+-	render([p_fstat, hostname, procmtd, procpart, procmounts]) {
++	render([p_fstat, hostname, procmtd, procpart, procmounts, emmc_fstat]) {
+ 		const has_sysupgrade = (p_fstat.type == 'file');
+-		const has_rootfs_data = (procmtd.match(/"rootfs_data"/) != null) || (procmounts.match("overlayfs:/overlay / ") != null);
++		const has_rootfs_data = (procmtd.match(/"rootfs_data"/) != null) || (procmounts.match("overlayfs:/overlay / ") != null) || (procmounts.match("overlay \/ overlay") != null);
++		const has_emmc_tool = (emmc_fstat.type == 'file');
+ 		const storage_size = findStorageSize(procmtd, procpart);
+ 		let m, s, o, ss;
+ 
+@@ -434,18 +436,22 @@ return view.extend({
+ 		}
+ 
+ 
+-		o = s.option(form.SectionValue, 'actions', form.NamedSection, 'actions', 'actions', _('Flash new firmware image'),
+-			has_sysupgrade
+-				? _('Upload a sysupgrade-compatible image here to replace the running firmware.')
+-				: _('Sorry, there is no sysupgrade support present; a new firmware image must be flashed manually. Please refer to the wiki for device specific install instructions.'));
++		if (has_emmc_tool) {
++			//hide firmware flash button on friendlywrt
++		} else {
++			o = s.option(form.SectionValue, 'actions', form.NamedSection, 'actions', 'actions', _('Flash new firmware image'),
++				has_sysupgrade
++					? _('Upload a sysupgrade-compatible image here to replace the running firmware.')
++					: _('Sorry, there is no sysupgrade support present; a new firmware image must be flashed manually. Please refer to the wiki for device specific install instructions.'));
+ 
+-		ss = o.subsection;
++			ss = o.subsection;
+ 
+-		if (has_sysupgrade) {
+-			o = ss.option(form.Button, 'sysupgrade', _('Image'));
+-			o.inputstyle = 'action important';
+-			o.inputtitle = _('Flash image...');
+-			o.onclick = L.bind(this.handleSysupgrade, this, storage_size, has_rootfs_data);
++			if (has_sysupgrade) {
++				o = ss.option(form.Button, 'sysupgrade', _('Image'));
++				o.inputstyle = 'action important';
++				o.inputtitle = _('Flash image...');
++				o.onclick = L.bind(this.handleSysupgrade, this, storage_size, has_rootfs_data);
++			}
+ 		}
+ 
+ 
+-- 
+2.54.0
