@@ -369,7 +369,10 @@ jobs:
         #make raw image bigger
         export RAW_SIZE_MB=1600
         ./build.sh sd-img
-        mv out/${{ steps.config.outputs.img_filename }}.gz ../artifact/
+        mv out/${{ steps.config.outputs.img_filename }} ../artifact/
+
+        cd ../artifact/
+        gzip *.img
 
     - name: Upload sd image to release
       uses: svenstaro/upload-release-action@v2
@@ -390,7 +393,10 @@ jobs:
       run: |
         cd project
         ./build.sh sd-img
-        mv out/${{ steps.config.outputs.img_filename }}.gz ../artifact/${{ steps.config.outputs.img_filename_without_overlayfs }}.gz
+        mv out/${{ steps.config.outputs.img_filename }} ../artifact/${{ steps.config.outputs.img_filename_without_overlayfs }}
+
+        cd ../artifact/
+        gzip *.img
 
     - name: Upload sd image without overlayfs to release
       uses: svenstaro/upload-release-action@v2
