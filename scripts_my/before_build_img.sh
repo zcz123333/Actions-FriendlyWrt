@@ -7,7 +7,7 @@ sed -i '/device\/common\/emmc-tools/d' `find device/friendlyelec/ -follow -type 
 #fix flash.js
 cp ../patches_my/23.05/0002-fix-to-make-factory-reset-button-work-on-FriendlyWrt.patch device/common/src-patchs/23.05/feeds/luci/
 cp ../patches_my/24.10/0002-fix-to-make-factory-reset-button-work-on-FriendlyWrt.patch device/common/src-patchs/24.10/feeds/luci/
-cp ../patches_my/25.12/0002-fix-to-make-factory-reset-button-work-on-FriendlyWrt.patch device/common/src-patchs/25.12/feeds/luci/
+cp ../patches_my/25.12/0002-luci-mod-system-replace-sysupgrade-flash-section-wit.patch device/common/src-patchs/25.12/feeds/luci/
 
 #fix image build for config preserve flashing
 # add extdata partition(mmcblk0p10) for config storage
