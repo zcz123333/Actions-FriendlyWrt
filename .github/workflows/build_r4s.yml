@@ -89,6 +89,15 @@ jobs:
         repo sync -c scripts/sd-fuse  --no-clone-bundle
         repo sync -c toolchain  --no-clone-bundle
 
+    - name: cache files
+      uses: actions/cache@v5
+      with:
+        path: |
+          project/friendlywrt/.ccache
+        key: ${{ runner.os }}-buildcache-${{ github.run_id }}
+        restore-keys: |
+          ${{ runner.os }}-buildcache-
+
     - name: Apply customizations
       run: |
         echo "======================="
@@ -129,18 +138,33 @@ jobs:
       continue-on-error: true
       run: |
         cd project/friendlywrt
-        if ! make -j$(nproc); then
-          echo "::warning::parallel build failed, retrying with V=s"
+        set +e
+        timeout 340m make -j$(nproc)
+        COMPILE_EXIT_CODE=$?
+        set -e
+        if [ $COMPILE_EXIT_CODE -eq 124 ]; then
+          echo "::warning::suspend after compile for 340m."
+          echo "::warning::manually trigger workflow to continue."
+          echo "timeout=true" >> $GITHUB_OUTPUT
+          exit 0
+        elif [ $COMPILE_EXIT_CODE -ne 0 ]; then
+          echo "::error::make finished with error try make -j1 V=s..."
           make -j1 V=s
+          exit 1
+        else
+          echo "compile finished!!"
+          echo "timeout=false" >> $GITHUB_OUTPUT
+          echo "compile_success=true" >> $GITHUB_OUTPUT
         fi
 
-    - name: Check the result and try again
-      if: steps.compile.outcome == 'failure'
-      run: |
-        cd project/friendlywrt
-        make -j1 V=s
+    # - name: Check the result and try again
+    #   if: steps.compile.outcome == 'failure'
+    #   run: |
+    #     cd project/friendlywrt
+    #     make -j1 V=s
 
     - name: Create rootfs package
+      if: steps.compile.outputs.compile_success == 'true'
       id: create_rootfs_package
       run: |
         cd project
@@ -153,7 +177,7 @@ jobs:
 
     - name: Create host package-manager bundle
       id: create_host_pm_package
-      if: matrix.SET == 'non-docker'
+      if: matrix.SET == 'non-docker' && steps.compile.outputs.compile_success == 'true'
       run: |
         cd project
         source .current_config.mk
@@ -185,6 +209,7 @@ jobs:
         echo "host_pm_filename=$host_pm_filename" >> $GITHUB_OUTPUT
 
     - name: Upload friendlywrt img
+      if: steps.compile.outputs.compile_success == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -194,6 +219,7 @@ jobs:
         file_glob: true
 
     - name: Upload rootfs package
+      if: steps.compile.outputs.compile_success == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -203,7 +229,7 @@ jobs:
         overwrite: true
 
     - name: Upload host package-manager bundle
-      if: matrix.SET == 'non-docker'
+      if: matrix.SET == 'non-docker' && steps.compile.outputs.compile_success == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -212,10 +238,13 @@ jobs:
         tag: ${{ needs.prepare_release.outputs.release_tag }}
         overwrite: true
 
+    outputs:
+      compile_success: ${{ steps.compile.outputs.compile_success }}
+
   build_img:
     needs: [prepare_release,build_friendlywrt]
     runs-on: ubuntu-22.04
-    if: github.event.repository.owner.id == github.event.sender.id
+    if: github.event.repository.owner.id == github.event.sender.id && needs.build_friendlywrt.outputs.compile_success == 'true'
 
     strategy:
       matrix:

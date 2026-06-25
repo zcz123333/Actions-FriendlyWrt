@@ -26,6 +26,8 @@ sed -i 's/=y/=n/g' configs/rockchip/02-luci_lang
 sed -i 's/CONFIG_LUCI_LANG_en=n/CONFIG_LUCI_LANG_en=y/' configs/rockchip/02-luci_lang
 sed -i 's/CONFIG_LUCI_LANG_zh_Hans=n/CONFIG_LUCI_LANG_zh_Hans=y/' configs/rockchip/02-luci_lang
 
+echo "CONFIG_CCACHE=y" >> configs/rockchip/01-nanopi
+
 # config_file_turboacc=`find friendlywrt/package/ -follow -type f -path '*/luci-app-turboacc/root/etc/config/turboacc'`
 # sed -i "s/option hw_flow '1'/option hw_flow '0'/" $config_file_turboacc
 # sed -i "s/option sfe_flow '1'/option sfe_flow '0'/" $config_file_turboacc
